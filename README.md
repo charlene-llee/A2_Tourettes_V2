@@ -40,7 +40,6 @@ haven't reached one yet), not at the beginning of the whole thing. Reaching the 
 mailbox at the end of the map completes the game.
 
 ## Files
-
 - `index.html` — page structure / HUD / overlays
 - `css/style.css` — visual styling, including the title-screen background art
 - `js/levels.js` — source data for the 5 original sections (ground layout, hazards, moving
@@ -48,7 +47,13 @@ mailbox at the end of the map completes the game.
   continuous `WORLD` map
 - `js/game.js` — game engine: input, physics, collision, camera, rendering, and the
   checkpoint/respawn system
+
+| files | source |
+|
+
 - `assets/images/mailman.png` — player walk-cycle sprite sheet
 - `assets/images/mailbox.png` — checkpoint mailbox art
 - `assets/images/levelbg.png` — background art
 - `assets/images/titlebg.png` — title-screen background art
+- `assets/sounds/background_music.mp3` — title-screen background music
+

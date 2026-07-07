@@ -79,6 +79,96 @@ const SPRITE_FRAME_DURATION = 0.12;
 const spriteSheet = new Image();
 
 let spriteLoaded = false;
+let menuMusic = null;
+let gameplayMusic = null;
+let currentMusic = null;
+let buttonClickSound = null;
+let jumpSound = null;
+let audioInitialized = false;
+
+function initAudio() {
+  if (audioInitialized) return;
+
+  audioInitialized = true;
+
+  menuMusic = new Audio("assets/sounds/background_music.mp3");
+  menuMusic.loop = true;
+  menuMusic.volume = 0.35;
+  menuMusic.preload = "auto";
+
+  gameplayMusic = new Audio("assets/sounds/game_music.mp3");
+  gameplayMusic.loop = true;
+  gameplayMusic.volume = 0.35;
+  gameplayMusic.preload = "auto";
+
+  buttonClickSound = new Audio("assets/sounds/button_click.mp3");
+  buttonClickSound.volume = 0.45;
+  buttonClickSound.preload = "auto";
+
+  jumpSound = new Audio("assets/sounds/jump_sound.mp3");
+  jumpSound.volume = 0.5;
+  jumpSound.preload = "auto";
+}
+
+function playSound(sound) {
+  if (!sound) return;
+  try {
+    sound.currentTime = 0;
+    const playPromise = sound.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {
+        const retry = () => {
+          playSound(sound);
+          window.removeEventListener("pointerdown", retry);
+          window.removeEventListener("keydown", retry);
+        };
+
+        window.addEventListener("pointerdown", retry, { once: true });
+        window.addEventListener("keydown", retry, { once: true });
+      });
+    }
+  } catch (e) {
+    // ignore autoplay/browser restrictions
+  }
+}
+
+function stopMusic(audio) {
+  if (!audio) return;
+  try {
+    audio.pause();
+    audio.currentTime = 0;
+  } catch (e) {
+    // ignore browser restrictions
+  }
+}
+
+function playMenuMusic() {
+  initAudio();
+  if (currentMusic === menuMusic) return;
+
+  stopMusic(gameplayMusic);
+  stopMusic(menuMusic);
+  currentMusic = menuMusic;
+  playSound(menuMusic);
+}
+
+function playGameplayMusic() {
+  initAudio();
+  if (currentMusic === gameplayMusic) return;
+
+  stopMusic(menuMusic);
+  stopMusic(gameplayMusic);
+  currentMusic = gameplayMusic;
+  playSound(gameplayMusic);
+}
+
+function playButtonSound() {
+  playSound(buttonClickSound);
+}
+
+function playJumpSound() {
+  playSound(jumpSound);
+}
 
 function preloadSprite() {
   return new Promise((resolve) => {
@@ -328,6 +418,7 @@ function setTitleBackground(active) {
 }
 
 function showStartOverlay() {
+  playMenuMusic();
   setTitleBackground(true);
   overlayTitle.textContent = "TACTIC";
   overlayBtn.textContent = "Play";
@@ -351,7 +442,10 @@ function showEndOverlay() {
 }
 
 overlayBtn.addEventListener("click", () => {
+  playButtonSound();
+
   if (overlay.dataset.title === "1") {
+    playButtonSound();
     // "Play" on the title screen — hand off to the level-select screen
     // instead of dropping straight into gameplay. This is also where a
     // returning player picks up wherever they left off.
@@ -378,6 +472,7 @@ overlayBtn.addEventListener("click", () => {
 });
 
 restartBtn.addEventListener("click", () => {
+  playButtonSound();
   respawnPlayer();
 });
 
@@ -405,6 +500,7 @@ window.addEventListener("keydown", (e) => {
         menuBtn.style.marginLeft = "10px";
         overlayBtn.parentNode.insertBefore(menuBtn, overlayBtn.nextSibling);
         menuBtn.addEventListener("click", () => {
+          playButtonSound();
           isPaused = false;
           overlay.dataset.pauseAction = "";
 
@@ -647,6 +743,7 @@ function update(dt) {
   if (keys.up && player.grounded) {
     player.vy = JUMP_VELOCITY;
     player.grounded = false;
+    playJumpSound();
     triggerJumpTraps();
   }
 

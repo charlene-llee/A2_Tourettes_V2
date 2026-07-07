@@ -144,6 +144,7 @@ function syncMailboxActivationFromProgress() {
 // resets (traps, moving platforms, the blink cycle) so nothing carries
 // over strangely from wherever the player was before.
 function startStage(levelIdx, stageIdx) {
+  playGameplayMusic();
   checkpoint = getStageEntryPoint(levelIdx, stageIdx);
   respawnPlayer();
   syncMailboxActivationFromProgress();
@@ -176,6 +177,8 @@ function buildLevelSelectDOM() {
   backBtn.className = "menu-btn";
   backBtn.textContent = "Back";
   backBtn.addEventListener("click", () => {
+    playButtonSound();
+    playMenuMusic();
     hideLevelSelect();
     // Back to the main menu. This resets the in-progress run's live
     // state (world, camera, player position) — saved Progress is
@@ -234,6 +237,7 @@ function refreshLevelSelectGrid(grid) {
 
       if (unlocked) {
         btn.addEventListener("click", () => {
+          playButtonSound();
           startStage(levelIdx, stageIdx);
         });
       }
