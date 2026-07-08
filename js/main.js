@@ -84,6 +84,7 @@ let gameplayMusic = null;
 let currentMusic = null;
 let buttonClickSound = null;
 let jumpSound = null;
+let mailboxBellSound = null;
 let audioInitialized = false;
 
 function initAudio() {
@@ -108,6 +109,10 @@ function initAudio() {
   jumpSound = new Audio("assets/sounds/jump_sound.mp3");
   jumpSound.volume = 0.5;
   jumpSound.preload = "auto";
+
+  mailboxBellSound = new Audio("assets/sounds/mailbox_bell.mp3");
+  mailboxBellSound.volume = 0.5;
+  mailboxBellSound.preload = "auto";
 }
 
 function playSound(sound) {
@@ -168,6 +173,10 @@ function playButtonSound() {
 
 function playJumpSound() {
   playSound(jumpSound);
+}
+
+function playMailboxBellSound() {
+  playSound(mailboxBellSound);
 }
 
 function preloadSprite() {
@@ -916,6 +925,7 @@ function update(dt) {
 function activateCheckpoint(mb) {
   if (mb.activated) return;
   mb.activated = true;
+  playMailboxBellSound();
 
   Progress.completeStage(mb.levelIndex, mb.stageIndex);
 
