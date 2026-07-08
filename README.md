@@ -48,12 +48,13 @@ mailbox at the end of the map completes the game.
 - `js/game.js` — game engine: input, physics, collision, camera, rendering, and the
   checkpoint/respawn system
 
-| files | source |
-|
-
-- `assets/images/mailman.png` — player walk-cycle sprite sheet
-- `assets/images/mailbox.png` — checkpoint mailbox art
-- `assets/images/levelbg.png` — background art
-- `assets/images/titlebg.png` — title-screen background art
-- `assets/sounds/background_music.mp3` — title-screen background music
-
+| files              | source                                           |
+| `assets/images/mailman.png` | player walk-cycle sprite sheet          |
+| `assets/images/mailbox.png` | checkpoint mailbox art                  |
+| `assets/images/levelbg.png` | background art                          |
+| `assets/images/titlebg.png` | title-screen background art             |
+| `assets/sounds/background_music.mp3` | title-screen background music  |
+| `assets/sounds/button_click.mp3` | button click sound                 |
+| `assets/sounds/game_music.mp3` | gameplay background music            |
+| `assets/sounds/jump_sound.mp3` | character jumping sounds             |
+| `assets/sounds/mailbox_bell.mp3` | bellsound when checkpoints are unlocked |
