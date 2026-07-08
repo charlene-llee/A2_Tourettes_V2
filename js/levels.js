@@ -110,7 +110,7 @@ const LEVEL_1_STAGES = [
     // viewport (the camera never scrolls in this game), and each step up
     // is within the player's ~128px max jump height.
     movingPlatforms: [
-      { x: 0, y: 580, width: 160, range: 0, speed: 0, phase: 0 }, // start — raised 20px
+      { x: 0, y: 500, width: 160, range: 0, speed: 0, phase: 0 }, // start — raised 20px
       { x: 260, y: 540, width: 130, range: 160, speed: 80, phase: 0 }, // raised 20px
       { x: 560, y: 540, width: 130, range: 160, speed: 80, phase: 1.5 }, // raised 20px
       { x: 900, y: 460, width: 150, range: 0, speed: 0, phase: 0 },

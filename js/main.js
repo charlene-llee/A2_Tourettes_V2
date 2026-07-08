@@ -686,12 +686,6 @@ function update(dt) {
     }
   }
 
-  // horizontal collision with the ground itself, treated as a solid wall
-  // on its sides. Ground tiles only ever resolved as a "stand on top of
-  // it" surface before, so a falling/jumping player could be pushed
-  // sideways straight through the edge of a ground slab (e.g. an
-  // elevated step) and end up embedded inside it instead of being
-  // blocked by it like a cliff face.
   const wallSegs = getGroundSegmentsAt(player.x);
   for (const seg of wallSegs) {
     const overlapX = player.x + player.w > seg.left && player.x < seg.right;
@@ -771,21 +765,12 @@ function update(dt) {
     }
   }
 
-  // ---- fell into a pit / off the world ----
-  // Each section keeps its own "how far can you fall before you die" rule
-  // (e.g. the old Level 5's tall vertical climb needed a much lower limit
-  // than the default), chosen by whichever section the player is over.
   const fallLimit = WORLD.sections[getSectionIndexForX(player.x)].fallLimit;
   if (player.y > fallLimit) {
     killPlayer();
     return;
   }
 
-  // ---- mailbox checkpoints ----
-  // mb.y lets a section (e.g. the old Level 5's door perched up high)
-  // override the default "sitting on the ground" position. Hitbox size
-  // (56x90) is unchanged and still matches mailbox.png exactly. Touching
-  // a mailbox sets it as the respawn point; it no longer ends the level.
   for (const mb of world.mailboxes) {
     const mbTop = mb.y !== undefined ? mb.y : world.def.groundY - mb.height;
     if (
@@ -810,12 +795,6 @@ function update(dt) {
   camera.x = clampCamera(player.x + player.w / 2);
 }
 
-// Marks a mailbox as this run's latest checkpoint (once), records the
-// stage as completed in the persistent save, and figures out where that
-// leaves the player: on to the next stage's respawn point, or — if that
-// was the last stage in this level — off to the Level Select screen so
-// they can choose where to go next. Reaching the very last stage of the
-// very last level still ends the game like before.
 function activateCheckpoint(mb) {
   if (mb.activated) return;
   mb.activated = true;
@@ -916,11 +895,6 @@ function draw() {
     }
   }
 
-  // hazards (box/dog tics). Last-stage hazards are tagged `flash: true` —
-  // they still damage the player the whole time (collision is handled
-  // separately in update()), they just skip their own draw call during
-  // their own "off" phase (see isHazardVisible), so each box flashes
-  // in and out independently instead of the player blinking.
   for (const hz of getAllHazards()) {
     if (hz.flash && !isHazardVisible(hz)) continue;
 
@@ -938,9 +912,6 @@ function draw() {
     }
   }
 
-  // mailbox checkpoints, honoring each one's mb.y override. Renders
-  // mailboxup.png until the checkpoint is reached, then swaps to
-  // mailboxdown.png to show that stage has been cleared.
   for (const mb of world.mailboxes) {
     const mbTop = mb.y !== undefined ? mb.y : world.def.groundY - mb.height;
 
@@ -982,14 +953,8 @@ function drawPlayer() {
     return;
   }
 
-  // --------------------------------------------------------
-  // ANIMATION
-  // --------------------------------------------------------
   const row = player.facing === -1 ? 0 : 1;
 
-  // Animate only while a direction key is actually held down. Using vx
-  // here would keep the walk-cycle running on Level 3 while the player
-  // slides to a stop from friction after letting go of the key.
   const isMoving = player.grounded && (keys.left || keys.right);
 
   const col = isMoving
@@ -999,9 +964,6 @@ function drawPlayer() {
   const sx = col * SPRITE_FRAME_W;
   const sy = row * SPRITE_FRAME_H;
 
-  // --------------------------------------------------------
-  // SCALE + FOOT LOCK (THIS FIXES FLOATING FEET)
-  // --------------------------------------------------------
   const SPRITE_SCALE = 0.4; // adjust to taste
 
   const drawW = SPRITE_FRAME_W * SPRITE_SCALE;
@@ -1022,10 +984,6 @@ function drawPlayer() {
     drawH,
   );
 }
-
-// ------------------------------------------------------------
-// Main loop
-// ------------------------------------------------------------
 
 function frame(timestamp) {
   if (lastTime === null) lastTime = timestamp;
