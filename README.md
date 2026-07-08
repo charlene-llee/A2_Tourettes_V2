@@ -49,6 +49,7 @@ mailbox at the end of the map completes the game.
   checkpoint/respawn system
 
 | files              | source                                           |
+|----|----|
 | `assets/images/mailman.png` | player walk-cycle sprite sheet          |
 | `assets/images/mailbox.png` | checkpoint mailbox art                  |
 | `assets/images/levelbg.png` | background art                          |
